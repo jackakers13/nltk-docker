@@ -60,9 +60,9 @@
  '(perl-indent-level 8)
  '(prolog-indent-width 8)
  '(python-shell-exec-path
-   "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8")
+   "/usr/bin/python3")
  '(python-shell-interpreter
-   "\"/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8\"")
+   "\"/usr/bin/python3\"")
  '(python-shell-process-environment (quote ("PYTHONPATH")))
  '(remote-shell-program "/bin/tcsh")
  '(safe-local-variable-values (quote ((techela-label . "f18-06623"))))
@@ -1010,7 +1010,7 @@
 ;;
 ;; http://emacs.stackexchange.com/questions/2399/code-block-specific-interpreter-in-org-babel
 
-(setq org-babel-python-command "python3.8")
+(setq org-babel-python-command "python3")
 
 
 
@@ -1074,3 +1074,17 @@
 ;; Kazic, 4.11.2018
 
 (require 'ox-md)
+
+;; Macro to copy links to the keyboard, useful in containers since Emacs can't directly open the host's web browser
+;; https://emacs.stackexchange.com/a/60555
+(defun farynaio/org-link-copy (&optional arg)
+  "Extract URL from org-mode link and add it to kill ring."
+  (interactive "P")
+  (let* ((link (org-element-lineage (org-element-context) '(link) t))
+          (type (org-element-property :type link))
+          (url (org-element-property :path link))
+          (url (concat type ":" url)))
+    (kill-new url)
+    (message (concat "Copied URL: " url))))
+
+(define-key org-mode-map (kbd "C-x C-l") 'farynaio/org-link-copy)

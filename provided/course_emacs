@@ -1,0 +1,1076 @@
+;; this is ~/.emacs
+
+
+;; emacs 27.1 starts in the wrong default directory, so fix it per
+;; https://apple.stackexchange.com/questions/399187/how-to-set-default-directory-for-emacs-27-1-app
+;;
+;; Kazic, 10.11.2020
+
+(setq default-directory "~/")
+(setq command-line-default-directory "~/")
+
+
+
+
+;; set the default shell to bash
+;; to prevent zsh over-ride by mac catalina
+;;
+;; from https://stackoverflow.com/questions/37409085/how-to-define-a-default-shell-for-emacs
+
+(setq-default shell-file-name "/bin/bash")
+
+
+;; more about encodings
+;;
+;; me/mimi/chores/teaching/current/cs7010/class_notes/
+;; https://www.emacswiki.org/emacs/ChangingEncodings
+
+
+;; make unix lineendings default
+(set-language-environment "ASCII")
+(setq default-buffer-file-coding-system 'us-ascii-unix)
+
+
+
+;; user-specific customization
+
+
+;; Xah Lee on fonts
+;; http://ergoemacs.org/emacs/emacs_encoding_decoding_faq.html
+;; manual: https://www.gnu.org/software/emacs/manual/html_node/emacs/Language-Environments.html
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(buffers-menu-show-status nil)
+ '(easy-menu-precalculate-equivalent-keybindings nil t)
+ '(inhibit-local-menu-bar-menus t)
+ '(inhibit-startup-screen t)
+ '(initial-scratch-message nil)
+ '(menu-prompting nil)
+ '(org-agenda-files
+   (quote
+    ("~/me/b/artistry/current_proposals/nifa_htp_big_data/proposal/proposal.org")))
+ '(package-selected-packages
+   (quote
+    (ess org pandoc ox-pandoc narrow-indirect markdown-toc markdown-mode+ ham-mode exec-path-from-shell ess-smart-underscore ess-smart-equals ess-R-object-popup ess-R-data-view emms ebib bongo)))
+ '(perl-indent-level 8)
+ '(prolog-indent-width 8)
+ '(python-shell-exec-path
+   "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8")
+ '(python-shell-interpreter
+   "\"/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8\"")
+ '(python-shell-process-environment (quote ("PYTHONPATH")))
+ '(remote-shell-program "/bin/tcsh")
+ '(safe-local-variable-values (quote ((techela-label . "f18-06623"))))
+ '(use-dialog-box nil)
+ '(use-file-dialog nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+;; this is .emacs
+;;
+;; A skeleton file of customizations, to which each user can add.  Copy this
+;; file into your home directory as .emacs and take it from there.
+;;
+;; For example, add your own own org files to this .emacs using the C-c [ command when in an org file.
+;;
+;;
+;; a nifty init.el at
+;;   https://github.com/suvayu/.emacs.d/blob/master/org-mode-config.el
+;;   
+;; Kazic, 29.8.2015
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;; emacs package maintenance ;;;;;;;;;;;;;;;;;;;;;
+
+
+; make sure other packages are available
+;
+; this is for an installation of Emacs on a Mac:  modify to point to the
+; installation directory for your machine
+;
+; per https://melpa.org/#/getting-started
+;
+; Kazic, 31.8.2021
+
+(require 'package)
+
+(add-to-list 'load-path "/Applications/Emacs.app/Contents/Resources/site-lisp/")
+(add-to-list 'load-path "~/.emacs.d/elpa/")
+
+
+;; getting and maintaining packages:  this is the easy way!  M-x package-list to
+;; get started
+;;
+;; from http://stackoverflow.com/questions/14836958/updating-packages-in-emacs
+;;
+;; Kazic, 21.4.2014
+;;
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/"))
+
+(package-initialize)
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;; sane emacs behaviors ;;;;;;;;;;;;;;;
+
+; I like to start emacs in text mode
+
+(setq default-major-mode 'text-mode)
+(setq text-mode-hook '(lambda () (auto-fill-mode 1)))
+(setq-default fill-column 75)
+(setq require-final-newline t)
+(display-time)
+(global-set-key "\C-c\C-g" 'goto-line)
+
+
+
+
+
+
+
+; more pleasant font and background: modify to suit yourself
+;
+; from Charles Curley's "Intermediate Emacs Hacking"
+; Linux Journal Thu, 2004-01-01 02:00
+
+(setq initial-frame-alist
+;    '((top . 40) (left . -15)
+;    '((top . 42) (left . -10)
+;    '((top . 42) (left . 0)
+;    '((top . 42) (left . 20)
+;    '((top . 42) (left . 150)
+;    '((top . 42) (left . 450)
+;    '((top . 20) (left . 400)
+    '((top . 20) (left . 200)
+;      (width . 120) (height . 52)
+;       (width . 120) (height . 47)
+;
+; a good window height for laptops
+;
+       (width . 100) (height . 47)
+;
+;      (background-color . "Gray94")
+;;      (background-color . "Gray70")
+;      (foreground-color . "Black")
+;
+;
+; toggle colors on and off for working in sunlight
+;
+      (background-color . "Black")
+      (foreground-color . "Green")
+;
+      (cursor-color     . "red3")
+      (user-position t)
+;;
+;; the number is the font size!
+;;
+      ( font . "-*-courier-medium-r-*-*-20-*-*-*-*-*-*-*")
+      ))
+
+
+
+
+
+
+
+; start a shell automatically
+
+(shell)
+
+
+
+
+
+
+
+
+
+; the following enables parenthesis/brace matching by the bouncing cursor
+
+(defun vi-type-paren-match (arg)
+  "Go to the matching parenthesis if on parenthesis."
+  (interactive "p")
+  (cond ((looking-at "[([{]") (forward-sexp 1) (backward-char))
+	((looking-at "[])}]") (forward-char) (backward-sexp 1))))
+
+(global-set-key "\C-x%" 'vi-type-paren-match)
+
+
+(put 'narrow-to-region 'disabled nil)
+
+
+
+
+
+
+
+
+; case swapping
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;; making org mode even better ;;;;;;;;;;;;;;;;;;;;
+
+
+;; stuff for org-mode
+;;
+ '(org-cycle-separator-lines -3)
+;;
+;; for org mode, from David O'Toole's org mode tutorial, 
+;; http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html
+;;
+;;
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cl" 'org-store-link)
+(setq org-log-done t)
+
+
+
+
+
+
+;; an example of adding org files so that they're visible when the agenda
+;; is computed.  You can do this by modifying this .emacs file or using the
+;; C-c [ command when in an org file.  Note each file must be listed
+;; individually (no recursive descent yet).
+;;
+;; (setq org-agenda-files (list "/Users/toni/me/artistry/org"
+;;                              "/Users/toni/me/artistry/references/bibliography"
+;;                              ....
+;; ))
+
+
+
+
+
+
+
+
+;; for ticket status tracking
+;;
+(setq org-todo-keywords
+       '((sequence "TODO" "STRTD" "GNG" "|" "DONE" "DLGTD" "DFRD" "CNLLD")))
+
+
+
+
+
+
+
+
+
+
+;; to cycle through the visibility of plain list items
+;;
+;; make sure org-list.el is in /Applications/Emacs.app/Contents/Resources/site-lisp/
+;;
+;; from [[http://sachachua.com/blog/2013/06/how-i-use-emacs-org-mode-for-my-weekly-reviews/][sacha ;; chua]]'s post on semi-automatic agenda computation.
+;;
+;; Kazic, 9.2.2015
+
+(setq org-cycle-include-plain-lists 'integrate)
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; easy templates in org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; for easy insertion of the remark template, so it's easier to comment on our notes
+;;
+;; Kazic, 13.3.2014
+;;
+;;
+;; ditto for code blocks of python, perl, R, and org itself
+;;
+;; Kazic, 27.8.2014
+;;
+;;
+;;
+;; emacs <= 26.*
+;;
+;; (eval-after-load 'org
+;;   '(progn
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("m" "#\n#\n#+caption: \n#+name: \n#+attr_latex: :placement [!t]\n[[./images/\n#\n#\n" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("u" "[[file:recordings/.ogg][audio]\n" ""))
+;; ;;     
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("r" "#+begin_rmk\n?\n#+end_rmk" ""))
+;; ;;
+;; ;; for generic tikz figures (t), graphs (g), and rxn systems (x)
+;; ;;
+;; ;; Kazic, 7.2.109
+;; ;;
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("t" "#\n#\n#+begin_latex\n\\begin{figure}[!t]\n\\begin{center}\n\\begin{tikzpicture}[every node/.style={shape=rectangle,align=center}]\n\n?\\end{tikzpicture}\n\\end{center}\n\\caption{}\n\\label{}\n\\end{figure}\n#+end_latex\n#\n#\n" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("g" "#\n#\n#+begin_latex\n\\begin{figure}[!t]\n\\begin{center}\n\\tikz[ every node/.style={circle,draw,inner sep=3pt,minimum size=6mm},\n        every edge/.append style={very thick}]\n\graph\n\\end{center}\n       { \n       };\n\\caption{}\n\\label{}\n\\end{figure}\n#+end_latex\n#\n#\n" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("d" "#+begin_src ditaa :file ./images/.png\n?\n#+end_src" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("p" "#+begin_src prolog\n?\n#+end_src" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("f" "#+begin_src perl\n?\n#+end_src" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("y" "#+begin_src python :results output\n?\n#+end_src" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("R" "#+begin_src R :exports code :results output graphics :file ./images/.png\n?\n#+end_src" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("q" "#\n#\n\\begin{equation}\n?\n\\end{equation}\n#\n#\n" ""))
+;;      (add-to-list 'org-structure-template-alist
+;;                   '("o" "#+begin_src org\n?\n#+end_src" ""))))
+
+
+
+
+
+
+;; emacs 27.1 implements org 9.2, which changed the format for
+;; template blocks.
+;;
+;; https://orgmode.org/Changes.html
+;;
+;; The new form requires a different key combination,
+;; but like many in this thread, I still prefer the old one.
+;;
+;; So this is the work-around from
+;; https://github.com/syl20bnr/spacemacs/issues/11798#issuecomment-465259918,
+;; #11798 (comment).
+;;
+;; THIS JUST FIXES THE KEYSTROKES, NOT THE STRUCTURE OF THE TEMPLATE LIST!
+;;
+;; Kazic, 10.11.2020
+
+(require 'org-tempo)
+
+
+;; So now I have to revise the template commands.
+;;
+;; https://emacs.stackexchange.com/questions/52441/how-to-modify-org-structure-template-alist-after-org-mode-9-2
+;;
+;; for my complicated commands, see
+;; https://emacs.stackexchange.com/questions/51384/config-easy-template-src-code-in-0rg-9-2/51411#51411
+
+
+
+
+;; emacs >= 27.*
+;;
+;; these are the formerly pretty standard ones, but quote and verse
+;; are nice additions
+;;
+;; Kazic, 10.11.2020
+
+(setq org-structure-template-alist
+  '(("a" . "export ascii\n")
+    ("c" . "center\n")
+    ("C" . "comment\n")
+    ("e" . "example\n")
+    ("E" . "export")
+    ("h" . "export html\n")
+    ("l" . "export latex\n")
+    ("q" . "quote\n")
+    ("s" . "src")
+    ("v" . "verse\n")))
+
+
+ 
+
+;; my more complicated templates
+;;
+;; Kazic, 10.11.2020
+
+(tempo-define-template "image-figs"
+		       '("#" n
+			 "#" n
+			 "#+caption: " n
+			 "#+name: " n
+			 "#+attr_latex: :placement [!t]" p n
+			 "[[./images/]" n
+			 "#" n "#" n)
+           "<m"
+           'org-tempo-tags)
+
+
+;; now probably obsolete for teaching, but not for other uses
+
+(tempo-define-template "recording-link"
+		       '("file:./recordings/.mp4][video]" n)
+           "<u"
+           'org-tempo-tags)
+
+
+(tempo-define-template "remark"
+		       '("#+begin_rmk" n
+			 p n
+			 "#+end_rmk" n)
+           "<r"
+           'org-tempo-tags)
+
+
+(tempo-define-template "ditaa-fig"
+		       '("#+begin_src ditaa :file ./images/.png" n
+			 p n
+			 "#+end_src" n)
+           "<d"
+           'org-tempo-tags)
+
+
+(tempo-define-template "prolog-block"
+		       '("#+begin_src prolog" n
+			 p n
+			 "#+end_src" n)
+           "<p"
+           'org-tempo-tags)
+
+
+(tempo-define-template "perl-block"
+		       '("#+begin_src perl" n
+			 p n
+			 "#+end_src" n)
+           "<f"
+           'org-tempo-tags)
+
+
+
+(tempo-define-template "python-block"
+		       '("#+begin_src python :results output" n
+			 p n
+			 "#+end_src" n)
+           "<y"
+           'org-tempo-tags)
+
+(tempo-define-template "R-block"
+		       '("#+begin_src R :exports code :results output graphics :file ./images/.png" n
+			 p n
+			 "#+end_src" n)
+           "<R"
+           'org-tempo-tags)
+
+
+(tempo-define-template "org-block"
+		       '("#+begin_src org" n
+			 p n
+			 "#+end_src" n)
+           "<o"
+           'org-tempo-tags)
+
+
+;; note still need to escape the latex \
+
+(tempo-define-template "eqn-block"
+		       '("#" n
+			 "#" n
+			 "\\begin{equation}" n
+			 p n
+			 "\\end{equation}" n
+			 "#" n
+			 "#" n)
+           "<eq"
+           'org-tempo-tags)
+
+
+
+(tempo-define-template "eqn-align"
+		       '("#" n
+			 "#" n
+			 "\\begin{align}" n
+			 "  " p " & =   \\" n
+			 "\\end{align}" n
+			 "#" n
+			 "#" n)
+           "<qa"
+           'org-tempo-tags)
+
+
+(tempo-define-template "tikz-fig"
+		       '("#" n
+			 "#" n
+			 "\\begin{figure}[!t]" n
+			 "\\begin{center}" n
+			 "\\begin{tikzpicture}[every node/.style={shape=rectangle,align=center}]" n p n
+			 "\\end{tikzpicture}" n
+			 "\\end{center}" n
+			 "\\caption{}" n
+			 "\\label{}" n
+			 "\\end{figure}" n)
+           "<t"
+           'org-tempo-tags)
+
+
+(tempo-define-template "tikz-graph"
+		       '("#" n
+			 "#" n
+			 "\\begin{figure}[!t]" n
+			 "\\begin{center}" n
+			 "\\begin{tikzpicture}[every node/.style={circle,draw,inner sep=3pt,minimum size=6mm}" n
+                         "                     every edge/.append style={very thick}]" n
+			 p n
+			 "\\end{tikzpicture}" n
+			 "\\end{center}" n
+			 "\\caption{}" n
+			 "\\label{}" n
+			 "\\end{figure}" n)
+           "<g"
+           'org-tempo-tags)
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;; enable local control of image size ;;;;;;;;;;;;;;;;;;;;
+
+
+;; despite the claims, neither method works for pngs!  By either clicking on the image
+;; or toggling in-line display with C-c C-x C-v .
+;;
+;; Kazic, 11.2.2017
+
+;; from http://stackoverflow.com/questions/11670654/how-to-resize-images-in-org-mode
+
+;; (setq org-image-actual-width nil)
+
+
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2012-08/msg01402.html
+
+(setq org-image-actual-width 300)
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; better latex export ;;;;;;;;;;;;;;;;;;;;;
+
+;; (setq org-latex-default-figure-position '!t}
+
+(setq org-latex-prefer-user-labels t)
+
+
+
+
+;; from https://superuser.com/questions/896741/how-do-i-configure-org-latex-classes-in-emacs
+;; and https://orgmode.org/worg/org-tutorials/org-latex-export.html#org9af88f0
+
+(require 'ox-latex)
+
+;; need one command for each new class!
+;;
+;; Kazic, 11.6.2020
+
+
+(add-to-list 'org-latex-classes
+             '("tikzposter"
+               "\\documentclass{tikzposter}"
+	       ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;;
+(add-to-list 'org-latex-classes
+             '("llncs"
+               "\\documentclass{llncs}"
+	       ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;;
+(add-to-list 'org-latex-classes
+             '("report"
+               "\\documentclass{report}"
+	       ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+
+
+
+
+
+
+
+;; kill the default export of all sorts of latex packages so these are easily specified
+;; in each file
+;;
+;; the only one that lingers is the hyperref package, which is baked into
+;; org export and must be manually removed from the latex preamble if no
+;; other packages are included.  I haven't figured out how to prevent
+;; hyperref's export, ugh!
+;;
+;; note that default packages can be individually shut off; see
+;; http://orgmode.org/worg/org-contrib/babel/examples/article-class.html#latex-progstruct
+;; (scroll far down)
+;;
+;; Kazic, 15.5.2014
+;;
+(setq org-latex-default-packages-alist nil)
+
+
+;; shutting off hyperref
+;;
+;; https://emacs.stackexchange.com/questions/12878/how-to-change-style-of-hyperlinks-within-pdf-published-from-org-mode-document
+;;
+;; Kazic, 11.6.2020
+
+(customize-set-value 'org-latex-with-hyperref nil)
+
+
+
+
+
+
+
+
+;; fontify source code blocks
+;; from http://doc.norang.ca/org-mode.html#Publishing, 16.8.1
+
+;; (setq org-latex-listings t)
+
+
+
+
+
+
+
+;; clean up those silly timestamps on latex export
+
+
+;; http://emacs.stackexchange.com/questions/18608/org-export-timestamps-not-working-as-expected/18616
+(require 'ox)
+(require 'ox-beamer)
+
+;; from https://github.com/fniessen/refcard-org-beamer
+
+(eval-after-load "ox-latex"
+
+  ;; update the list of LaTeX classes and associated header (encoding, etc.)
+  ;; and structure
+  '(add-to-list 'org-latex-classes
+                `("beamer"
+                  ,(concat "\\documentclass[presentation]{beamer}\n"
+                           "[DEFAULT-PACKAGES]"
+                           "[PACKAGES]"
+                           "[EXTRA]\n")
+                  ("\\section{%s}" . "\\section*{%s}")
+                  ("\\subsection{%s}" . "\\subsection*{%s}")
+                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+
+
+;;
+;; http://endlessparentheses.com/better-time-stamps-in-org-export.html
+
+
+(add-to-list 'org-export-filter-timestamp-functions
+             #'endless/filter-timestamp)
+(defun endless/filter-timestamp (trans back _comm)
+  "Remove <> around time-stamps."
+  (pcase back
+    ((or `jekyll `html)
+     (replace-regexp-in-string "&[lg]t;" "" trans))
+    (`latex
+     (replace-regexp-in-string "[<>]" "" trans))))
+
+
+(setq-default org-display-custom-times t)
+;;; Before you ask: No, removing the <> here doesn't work.
+(setq org-time-stamp-custom-formats
+      '("<%d %b %Y>" . "<%d/%m/%y %a %H:%M>"))
+
+
+
+
+
+
+;; from http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported,
+;; answer #2
+
+;; (defun org-export-filter-timestamp-remove-brackets (timestamp backend info)
+;;   "removes relevant brackets from a timestamp"
+;;   (when (org-export-derived-backend-p backend 'latex)
+;;         (replace-regexp-in-string "[<>]\\|[][]" "" timestamp)))
+
+
+;; (eval-after-load 'ox '(add-to-list
+;;                        'org-export-filter-timestamp-functions
+;;                        'org-export-filter-timestamp-remove-brackets))
+
+
+;; from http://orgmode.org/manual/Advanced-configuration.html
+
+
+
+
+;; and to make the dates a bit prettier,
+;; http://endlessparentheses.com/better-time-stamps-in-org-export.html
+
+;; (setq org-time-stamp-custom-formats
+;;      '("<%d %b %Y>" . "<%d.%m.%y>"))
+
+
+
+
+
+
+;; remove org comments during latex export so new lines aren't introduced; 
+;;
+;; this solution from John Kitchin uses the export hook and seems to be the best option,
+;; since the export engine was revised
+;;
+;; http://pragmaticemacs.com/emacs/prevent-comments-from-breaking-paragraphs-in-org-mode-latex-export/
+;; quoting
+;; https://emacs.stackexchange.com/questions/22574/orgmode-export-how-to-prevent-a-new-line-for-comment-lines
+;;
+;; Kazic, 19.9.2018
+;;
+;;
+;;
+;; cl (Common Lisp package) is now deprecated in favor of cl-lib.
+;; cl's loop construct becomes cl-loop.  The rest of Kitchin's code is
+;; unchanged.
+;;
+;; Kazic, 11.11.2020
+
+
+(require 'cl-lib)
+
+
+(defun delete-org-comments (backend)
+  (cl-loop for comment in (reverse (org-element-map (org-element-parse-buffer)
+                    'comment 'identity))
+    do
+    (setf (buffer-substring (org-element-property :begin comment)
+                (org-element-property :end comment))
+          "")))
+
+;; add to export hook
+(add-hook 'org-export-before-processing-hook 'delete-org-comments)
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;; getting other languages to work within org mode ;;;;;;;;;;
+
+
+
+;;;;;; encodings!
+
+;; from https://emacs.stackexchange.com/questions/37485/how-to-set-default-encoding-to-utf-8-and-default-line-ending-to-linux-style?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+;;
+;; and
+;;
+;; https://stackoverflow.com/questions/7687547/how-to-find-and-remove-the-invisible-characters-in-text-file-using-emacs
+
+
+
+
+
+;; to make nice plots and otherwise interpret code in an org file
+;;
+;; cribbed from http://doc.norang.ca/org-mode.html#playingwithditaa
+;;
+;; Kazic, 11.9.2014
+;;
+;; see also
+;; https://www.johndcook.com/blog/2016/06/15/ascii-art-diagrams-in-emacs-org-mode/
+;; http://ditaa.sourceforge.net/
+
+(setq org-ditaa-jar-path "/Applications/Emacs.app/Contents/Resources/site-lisp/ditaa0_9/ditaa0_9.jar")
+
+(add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+; Make babel results blocks lowercase
+(setq org-babel-results-keyword "results")
+
+
+
+
+
+
+;; inline image display of jpg and I think png, very handy
+
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+
+
+
+
+
+
+;; emacs 26.1 broke the old version on org mode, here are the fixes:
+;;
+;; https://www.reddit.com/r/emacs/comments/7d4ief/file_mode_specification_error_obsh_on_entering/
+;; https://emacs.stackexchange.com/questions/43767/after-i-updated-emacs-25-1-to-26-1-org-mode-does-not-work-any-more
+
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (ditaa . t)
+   (perl . t)
+   (R . t)
+   (python . t)
+   (gnuplot . t)
+   (shell . t)
+   (org . t)
+   (latex . t)))
+
+
+
+
+
+
+
+
+; Do not prompt to confirm evaluation of code blocks
+; This may be dangerous - make sure you understand the consequences
+; of setting this -- see the docstring for details
+
+(setq org-confirm-babel-evaluate nil)
+
+
+
+
+
+;; set up for org-ref of John Kitchin
+;;
+;; https://github.com/jkitchin/org-ref/blob/master/org-ref.org
+;; https://www.youtube.com/watch?v=JyvpSVl4_dg
+;; https://www.youtube.com/watch?v=8cEb6F9AEu0
+;; https://www.youtube.com/watch?v=2t925KRBbFc
+;;
+;; https://github.com/tmalsburg/helm-bibtex
+;;
+;; https://mg.readthedocs.io/latexmk.html
+
+
+
+;; (require 'org-ref)
+;; (require 'doi-utils)
+;; (require 'org-ref-pubmed)
+;; (require 'org-ref-arxiv)
+
+
+
+;; (setq reftex-default-bibliography
+;;       '("~/me/b/artistry/references/bibliography/journals.bib"
+;; 	"~/me/b/artistry/references/bibliography/keys.bib"
+;; 	"~/me/b/artistry/references/bibliography/miscellaneous.bib"
+;; 	"~/me/b/artistry/references/bibliography/all.bib"))
+
+
+;; (setq org-ref-bibliography-notes "~/me/b/artistry/references/bibliography/bibnotes.org"
+;;       org-ref-default-bibliography
+;;       '("~/me/b/artistry/references/bibliography/journals.bib"
+;; 	"~/me/b/artistry/references/bibliography/keys.bib"
+;; 	"~/me/b/artistry/references/bibliography/miscellaneous.bib"
+;; 	"~/me/b/artistry/references/bibliography/all.bib")
+;;       org-ref-pdf-directory "~/me/b/zu_lesen/papers_to_sort")
+
+
+
+
+;; (setq bibtex-completion-additional-search-fields
+;;       '( "key" ))
+
+
+;; (setq org-ref-show-broken-links t)
+
+
+
+
+
+;; ;; open pdf with Skim and use firefox as the browser
+;; ;; from helm-bibtex docs
+;; ;;
+;; (setq bibtex-completion-pdf-open-function
+;;   (lambda (fpath)
+;;     (start-process "open" nil 0 nil "-a" "/Applications/Skim.app" fpath)))
+
+
+;; ;; nope ... try the above
+
+;; (setq bibtex-completion-browser-function
+;;       (lambda (url _)
+;; ;;	(start-process "firefox" "*firefox*" "firefox" url)))
+;;         (start-process "open" nil 0 nil "-a" "Firefox" url)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;; Python
+
+
+;; after installing exec-path-from-shell using melpa and M-x list packages,
+;; this should get the correct path under Mac GUI emacs
+;;
+;; https://github.com/purcell/exec-path-from-shell
+;;
+;;
+;; nb:  at the bash prompt in emacs, this will not return the correct paths.
+;; BUT the correct paths will be displayed in the minibuffer window upon asking
+;; for M-x getenv.  To fix this problem, insert the explicit, full paths for PATH and
+;; PYTHONPATH in BOTH .bashrc and .bash_profile.
+
+
+
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+(exec-path-from-shell-copy-env "PATH")
+(exec-path-from-shell-copy-env "PYTHONPATH")
+
+;; for megam
+;;
+;; Kazic, 23.1.2017
+;;
+;; (exec-path-from-shell-copy-env "MEGAM")
+
+
+
+
+
+
+;; so org mode calls the right version of python:
+;;
+;; http://emacs.stackexchange.com/questions/2399/code-block-specific-interpreter-in-org-babel
+
+(setq org-babel-python-command "python3.8")
+
+
+
+
+
+
+
+
+
+;; indentation for python:  it doesn't care about the amount of indentation,
+;; just the level of indentation.  I like 8 spaces for readability, but python expects 4
+;; and whines otherwise.
+;;
+;; (setq python-indent-level 8)
+
+
+
+
+
+
+;; for fontifying source code
+(setq org-src-fontify-natively t)
+
+
+
+; Make babel results blocks lowercase
+(setq org-babel-results-keyword "results")
+
+
+
+
+;;;; for ESS
+;; 1.3.2017
+
+;;;(add-to-list 'load-path "/Applications/Emacs.app/Contents/Resources/site-lisp/ess/")
+;;;(require 'ess-site)
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;; getting right modes for prolog and perl ;;;;;;;;;;;;;;;
+;;
+;;
+;; from Xah Lee, of course:
+;; http://ergoemacs.org/emacs/emacs_auto-activate_a_major-mode.html
+
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+(add-to-list 'auto-mode-alist '("\\.perl\\'" . perl-mode))
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;; markdown and jekyll configuration ;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;
+;; Kazic, 4.11.2018
+
+(require 'ox-md)

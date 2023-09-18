@@ -22,7 +22,7 @@ R: https://www.r-project.org/
     - This will take a while. On a high-end PC with a fast internet connection, it took me around 15 minutes.
 3) Run the nltk-docker image (creating a "container") by running `./docker-run.sh`
     - This will ask for your password, as it needs root permissions to run `sudo systemctl start docker` to make sure that Docker Engine is running. You can safely remove that line if you've already started the engine.
-4) This repositoy will be mounted at `/root/nltk-docker` inside of the container. Any files that you create/edit in here will be reflected on your host machine. All other files are ephemeral and will be reset every time your restart
+    - This repositoy will be mounted at `/root/nltk-docker` inside of the container. Any files that you create/edit in here will be reflected on your host machine. All other files are ephemeral and will be reset every time your restart
 
 # Notes
 - In general, the largest complication for getting this running on any machine is going to be making sure that the container is able to run GUI applications (Emacs). If you are willing to operate exclusively in the command line, you can avoid setting up an X11 server and remove a LOT of the bloat in `./docker-run.sh`.

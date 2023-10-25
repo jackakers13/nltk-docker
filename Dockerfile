@@ -28,6 +28,9 @@ RUN emacs -Q --batch --eval "(require 'package)" \
 RUN pip install nltk
 RUN python3 -m nltk.downloader all
 
+# Install scikit-learn
+RUN pip install scikit-learn
+
 # Install LaTeX
 RUN apt install -y texlive-full
 
